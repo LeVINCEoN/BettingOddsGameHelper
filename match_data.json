@@ -1,4 +1,4 @@
-{
+[{
     "country1": "Hungary",
     "country2": "Switzerland",
     "points_country1_win": 3,
@@ -7,4 +7,4 @@
     "odds_country1_win": "14/5",
     "odds_draw": "23/10",
     "odds_country2_win": "16/13"
-}
+}]

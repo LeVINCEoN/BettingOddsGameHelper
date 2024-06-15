@@ -14,12 +14,8 @@ def calculate_expected_value(probability, game_points):
     return probability * game_points
 
 
-def main():
-    # Load data from a JSON file
-    with open("match_data.json", "r") as file:
-        data = json.load(file)
-
-    # Extracting match details
+def process_match_data(data):
+    # Extract match details
     country1 = data["country1"]
     country2 = data["country2"]
     points_country1_win = data["points_country1_win"]
@@ -28,12 +24,6 @@ def main():
     odds_country1_win = data["odds_country1_win"]
     odds_draw = data["odds_draw"]
     odds_country2_win = data["odds_country2_win"]
-
-    # Print input parameters for verification
-    print("Input Parameters:")
-    print(f"Match: {country1} vs {country2}")
-    print(f"Points - {country1} Win: {points_country1_win}, Draw: {points_draw}, {country2} Win: {points_country2_win}")
-    print(f"Odds - {country1} Win: {odds_country1_win}, Draw: {odds_draw}, {country2} Win: {odds_country2_win}\n")
 
     # Calculations
     decimal_odds_country1_win = calculate_decimal_odds(odds_country1_win)
@@ -48,20 +38,39 @@ def main():
     ev_draw = calculate_expected_value(probability_draw, points_draw)
     ev_country2_win = calculate_expected_value(probability_country2_win, points_country2_win)
 
-    # Output results
-    print("Expected Values:")
-    print(f"{country1} win - Expected Value: {ev_country1_win:.3f}")
-    print(f"Draw - Expected Value: {ev_draw:.3f}")
-    print(f"{country2} win - Expected Value: {ev_country2_win:.3f}\n")
-
-    # Determine the best pick
     outcomes = {
         f"{country1} win": ev_country1_win,
         "Draw": ev_draw,
         f"{country2} win": ev_country2_win
     }
+    return outcomes
+
+
+def print_match_data(data):
+    print("Input Parameters:")
+    print(f"Match: {data['country1']} vs {data['country2']}")
+    print(f"Points - {data['country1']} Win: {data['points_country1_win']}, Draw: {data['points_draw']}, {data['country2']} Win: {data['points_country2_win']}")
+    print(f"Odds - {data['country1']} Win: {data['odds_country1_win']}, Draw: {data['odds_draw']}, {data['country2']} Win: {data['odds_country2_win']}\n")
+
+
+def print_results(outcomes):
+    print("Expected Values:")
+    for outcome, value in outcomes.items():
+        print(f"{outcome} - Expected Value: {value:.3f}")
     best_pick = max(outcomes, key=outcomes.get)
-    print(f"Recommended pick: {best_pick} with EV: {outcomes[best_pick]:.3f}")
+    print(f"\nRecommended pick: {best_pick} with EV: {outcomes[best_pick]:.3f}")
+
+
+def main():
+    # Load data from a JSON file
+    with open("match_data.json", "r") as file:
+        all_data = json.load(file)
+
+        # Loop through each match data
+    for data in all_data:
+        print_match_data(data)
+        outcomes = process_match_data(data)
+        print_results(outcomes)
 
 
 if __name__ == "__main__":
