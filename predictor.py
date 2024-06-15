@@ -71,6 +71,7 @@ def main():
         print_match_data(data)
         outcomes = process_match_data(data)
         print_results(outcomes)
+        print("\n")
 
 
 if __name__ == "__main__":
